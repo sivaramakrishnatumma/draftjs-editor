@@ -1,0 +1,17 @@
+.app {
+  display: flex;
+  /* flex-direction: column; */
+  gap: 2em;
+  justify-content: center;
+  align-items: center;
+  max-width: 80%;
+  margin: auto;
+  margin-top: 10em;
+
+  & > div {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  }
+}
