@@ -1,10 +1,12 @@
-import { useEffect, useId } from 'react';
-import { Editor as DraftEditor, RichUtils } from 'draft-js';
+import { useEffect, useId, useRef } from 'react';
+import { DefaultDraftBlockRenderMap, Editor as DraftEditor, RichUtils } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
+import { Map } from 'immutable';
 import { useEditorContext } from '../provider/EditorContext';
+import { blockRenderMap, customStyleMap, getBlockRendererFn, getStateToHtmlOptions } from '../utils/renderConfig';
+import { blockStyle } from '../utils/helpers';
 import 'draft-js/dist/Draft.css';
 import './Editor.css';
-import { customStyleMap, getStateToHtmlOptions } from '../utils/renderConfig';
 
 const convertEditorStateToHtml = state => {
   const currentContent = state.getCurrentContent();
@@ -13,8 +15,12 @@ const convertEditorStateToHtml = state => {
   return htmlContent;
 };
 
+const customBlockRenderMap = Map(blockRenderMap);
+const extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(customBlockRenderMap);
+
 // eslint-disable-next-line react/prop-types
 const Editor = ({ value, placeholder = 'Start typing...', onChange, className }) => {
+  const editor = useRef();
   const id = useId();
   const {
     editorStates,
@@ -85,12 +91,22 @@ const Editor = ({ value, placeholder = 'Start typing...', onChange, className })
     activateEditor(id);
   };
 
+  const getEditorState = () => {
+    return editorStates[id];
+  };
+
+  const blockRendererFn = getBlockRendererFn(editor.current, getEditorState, onChange);
+
   return (
     editorStates[id] && (
       <div className={`editable editor ${className}`}>
         <DraftEditor
+          ref={editor}
           placeholder={placeholder}
           customStyleMap={customStyleMap}
+          blockRendererFn={blockRendererFn}
+          blockRenderMap={extendedBlockRenderMap}
+          blockStyleFn={contentBlock => blockStyle(contentBlock)}
           editorState={editorStates[id]}
           onChange={handleChange}
           handleKeyCommand={handleKeyCommand}

@@ -91,3 +91,30 @@ export function buildHtmlForBlockText(result, block, contentState) {
   );
   return result;
 }
+
+export const blockStyle = block => {
+  const type = block.getType();
+  const depth = block.getDepth();
+  const data = block.getData();
+  const classes = [];
+  if (depth > 0 && !type.includes('list-item')) {
+    classes.push('indent' + depth);
+  }
+  if (type === 'pasted-list-item') {
+    const indent = data.get('margin-left') ?? '00';
+    if (indent.slice(0, 2) > 36) {
+      classes.push('indent1');
+    }
+  }
+  data.forEach((v, k) => {
+    switch (k) {
+      case 'text-align':
+      case 'float':
+        classes.push(`${k}-${v}`);
+        break;
+      default:
+        return null;
+    }
+  });
+  if (classes.length) return classes.join(' ');
+};

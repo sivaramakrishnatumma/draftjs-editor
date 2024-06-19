@@ -1,3 +1,5 @@
+import { faAlignCenter, faAlignLeft, faAlignRight } from '@fortawesome/free-solid-svg-icons';
+
 export const MAX_LIST_DEPTH = 4;
 export const defaultPreTagStyling = [
   ['padding', '9.5px'],
@@ -65,3 +67,10 @@ export const availableColors = (() => {
   });
   return availableColors;
 })();
+
+export const availableAlignments = [
+  { alignment: 'left', icon: faAlignLeft, tooltip: 'Align Left' },
+  { alignment: 'center', icon: faAlignCenter, tooltip: 'Align Center' },
+  { alignment: 'right', icon: faAlignRight, tooltip: 'Align Right' },
+  // { type: 'justify', icon: 'align-justify-sld'  },
+];

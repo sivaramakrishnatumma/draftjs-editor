@@ -1,9 +1,10 @@
 import { DefaultDraftInlineStyle } from 'draft-js';
-import { COLORS, FONT_SIZES, MAX_LIST_DEPTH, defaultPreTagStyling } from './constants';
+import { Map, OrderedSet } from 'immutable';
 import camelCase from 'lodash.camelcase';
 import isEmpty from 'lodash.isempty';
+import { COLORS, FONT_SIZES, MAX_LIST_DEPTH, defaultPreTagStyling } from './constants';
 import { buildHtmlForBlockText, convertStyleStringToObject, getClassesAndStyles } from './helpers';
-import { Map, OrderedSet } from 'immutable';
+import { StyledBlock } from './blockRenderComponents';
 
 export const customStyleMap = (() => {
   const styleMap = { ...DefaultDraftInlineStyle };
@@ -56,6 +57,83 @@ export const customStyleFn = style => {
     return null;
   }
   return style;
+};
+
+export const getBlockRendererFn = (editor, getEditorState, onChange) => block => {
+  const type = block.getType();
+  switch (type) {
+    case 'atomic':
+      return {
+        component: Image,
+        editable: false,
+        props: {
+          editor,
+          getEditorState,
+          onChange,
+        },
+      };
+    // case 'horizontal-rule':
+    //   return {
+    //     component: HorizontalRule,
+    //   };
+    // case 'page-break':
+    //   return {
+    //     component: Pagebreak,
+    //   };
+    // case 'pasted-list-item':
+    //   return {
+    //     component: ListItem,
+    //     editable: true,
+    //   };
+    case 'unstyled':
+      // case 'paragraph':
+      // case 'header-one':
+      // case 'header-two':
+      // case 'header-three':
+      // case 'header-four':
+      // case 'header-five':
+      // case 'header-six':
+      // case 'code-block':
+      return {
+        component: StyledBlock,
+        editable: true,
+      };
+    // case 'table':
+    //   return {
+    //     component: Table,
+    //     editable: true,
+    //     props: {
+    //       editor,
+    //     },
+    //   };
+    default:
+      return null;
+  }
+};
+
+/**
+ * blockRenderMap, customStyleMap, customStyleFn & getBlockRendererFn are used by draft.js to convert its internal data structure
+ * into html for display in the editor's content-editable area.
+ */
+export const blockRenderMap = {
+  unstyled: {
+    element: 'div',
+  },
+  // using section tag for paragraph block type because Draftjs inserts extra divs within the content, resulting in
+  // a validateDOMNesting warning if p tag is used (<div> cannot be a descendant of <p>).
+  // This is only used while content is displayed in the editor. When the paragraph block type
+  // is exported to formLinker a <p> tag is used, as provided in the getStateToHtmlOptions function below.
+  paragraph: {
+    element: 'section',
+  },
+  // pasted-list-item is used for ul/ol lists that were pasted into the editor from another source, e.g. google docs
+  // and thus are formatted differently than natively created lists
+  'pasted-list-item': {
+    element: 'ol',
+  },
+  table: {
+    element: 'div',
+  },
 };
 
 /**
