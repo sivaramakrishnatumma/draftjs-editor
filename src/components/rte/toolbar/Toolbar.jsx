@@ -5,6 +5,7 @@ import './Toolbar.css';
 import FontSizeList from './components/FontSizeList';
 import ColorPickerPopup from './components/ColorPickerPopup';
 import Alignment from './components/Alignment';
+import UndoRedo from './components/UndoRedo';
 
 const moveSelectionToStart = currentEditorState => {
   let selection = currentEditorState.getSelection();
@@ -66,12 +67,19 @@ const Toolbar = () => {
     updateEditorState(EditorState.push(activeEditorState, newContentState, 'change-block-data'));
   };
 
+  const handleUndoRedo = event => {
+    const newState = event === 'undo' ? EditorState.undo(activeEditorState) : EditorState.redo(activeEditorState);
+
+    updateEditorState(newState);
+  };
+
   return (
     <div className="toolbar-container" onMouseDown={e => e.preventDefault()}>
       <FontSizeList onChange={toggleInlineStyle} />
       <InlineStyles />
       <ColorPickerPopup onChange={toggleInlineStyle} />
       <Alignment onChange={setAlignment} />
+      <UndoRedo onChange={handleUndoRedo} />
     </div>
   );
 };
