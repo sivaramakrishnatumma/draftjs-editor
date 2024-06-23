@@ -1,5 +1,6 @@
-import { faAlignCenter, faAlignLeft, faAlignRight } from '@fortawesome/free-solid-svg-icons';
+import { faAlignCenter, faAlignLeft, faAlignRight, faIndent, faOutdent } from '@fortawesome/free-solid-svg-icons';
 
+export const MAX_INDENT_DEPTH = 20;
 export const MAX_LIST_DEPTH = 4;
 export const defaultPreTagStyling = [
   ['padding', '9.5px'],
@@ -36,28 +37,12 @@ export const COLORS = [
   '#CC0088',
 ];
 
-export const FONT_SIZES = [
-  {
-    label: 'Small',
-    value: 'small',
-    size: '12',
-  },
-  {
-    label: 'Medium',
-    value: 'medium',
-    size: '16',
-  },
-  {
-    label: 'Large',
-    value: 'large',
-    size: '24',
-  },
-];
+export const FONT_SIZES = [8, 9, 10, 11, 12, 14, 18, 24, 36];
 
 export const availableFontSizes = (() => {
-  return FONT_SIZES.map(font => {
-    return { type: `fontSize.${font.size}`, label: font.label };
-  });
+  return FONT_SIZES.map(size => {
+    return { type: `fontSize.${size}`, label: size };
+  }).concat({ type: 'fontSize.unset', label: 'reset' });
 })();
 
 export const availableColors = (() => {
@@ -73,4 +58,17 @@ export const availableAlignments = [
   { alignment: 'center', icon: faAlignCenter, tooltip: 'Align Center' },
   { alignment: 'right', icon: faAlignRight, tooltip: 'Align Right' },
   // { type: 'justify', icon: 'align-justify-sld'  },
+];
+
+export const availableIndents = [
+  {
+    direction: 'INDENT',
+    icon: faIndent,
+    tooltip: 'Increase Indent',
+  },
+  {
+    direction: 'OUTDENT',
+    icon: faOutdent,
+    tooltip: 'Decrease Indent',
+  },
 ];

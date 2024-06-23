@@ -4,10 +4,9 @@ import useOnClickOutside from 'use-onclickoutside';
 import './BaseDropdown.css';
 
 function BaseDropdown(props) {
-  const { placeholder, options, displayKey, valueKey, onChange } = props;
+  const { placeholder, options, displayKey, valueKey, activeOption, onChange } = props;
   const ref = useRef();
 
-  const [selected, setSelected] = useState();
   const [showOptions, setShowOptions] = useState(false);
 
   useOnClickOutside(ref, () => {
@@ -19,7 +18,6 @@ function BaseDropdown(props) {
   const handleMouseDown = (event, option) => {
     event.preventDefault();
 
-    setSelected(option[displayKey]);
     onChange(option[valueKey]);
     setShowOptions(!showOptions);
   };
@@ -32,13 +30,14 @@ function BaseDropdown(props) {
   return (
     <div ref={ref} className="dropdown">
       <div className="select" onMouseDown={handleDropdownClick}>
-        {selected || placeholder} <i className={`arrow ${showOptions ? 'down' : 'up'}`}></i>
+        {(activeOption && activeOption[displayKey]) || placeholder}{' '}
+        <i className={`arrow ${showOptions ? 'down' : 'up'}`}></i>
       </div>
       <div className={`options ${showOptions ? 'show' : ''}`}>
         {options.map(option => (
           <div
             key={option[valueKey]}
-            className={`option ${selected === option[displayKey] ? 'selected' : ''}`}
+            className={`option ${activeOption && activeOption[displayKey] === option[displayKey] ? 'selected' : ''}`}
             onMouseDown={e => handleMouseDown(e, option)}
           >
             {option[displayKey]}
@@ -54,6 +53,7 @@ BaseDropdown.propTypes = {
   options: PropTypes.arrayOf(PropTypes.object),
   displayKey: PropTypes.string,
   valueKey: PropTypes.string,
+  activeOption: PropTypes.object,
   onChange: PropTypes.func,
 };
 

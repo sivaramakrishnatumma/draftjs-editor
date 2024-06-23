@@ -6,6 +6,8 @@ import FontSizeList from './components/FontSizeList';
 import ColorPickerPopup from './components/ColorPickerPopup';
 import Alignment from './components/Alignment';
 import UndoRedo from './components/UndoRedo';
+import Indent from './components/Indent';
+import { MAX_INDENT_DEPTH, MAX_LIST_DEPTH } from '../utils/constants';
 
 const moveSelectionToStart = currentEditorState => {
   let selection = currentEditorState.getSelection();
@@ -73,6 +75,42 @@ const Toolbar = () => {
     updateEditorState(newState);
   };
 
+  const setIndent = (
+    direction,
+    newEditorState = activeEditorState,
+    listMax = MAX_LIST_DEPTH,
+    indentMax = MAX_INDENT_DEPTH,
+    setDepth
+  ) => {
+    const selectionState = newEditorState.getSelection();
+    const contentState = newEditorState.getCurrentContent();
+    const adjustment = direction === 'INDENT' ? 1 : -1;
+    const startKey = selectionState.getStartKey();
+    const endKey = selectionState.getEndKey();
+    let blockMap = contentState.getBlockMap();
+    const blocks = blockMap
+      .toSeq()
+      .skipUntil((_, k) => k === startKey)
+      .takeUntil((_, k) => k === endKey)
+      .concat([[endKey, blockMap.get(endKey)]])
+      .map(block => {
+        const depth = block.getDepth();
+        const maxDepth = block.getType().includes('list-item') ? listMax : indentMax;
+        const newDepth = setDepth !== undefined ? setDepth : Math.max(0, Math.min(depth + adjustment, maxDepth));
+        return block.set('depth', newDepth);
+      });
+
+    blockMap = blockMap.merge(blocks);
+    const newContentState = contentState.merge({
+      blockMap,
+      selectionBefore: selectionState,
+      selectionAfter: selectionState,
+    });
+    newEditorState = EditorState.push(newEditorState, newContentState, 'adjust-depth');
+
+    updateEditorState(newEditorState);
+  };
+
   return (
     <div className="toolbar-container" onMouseDown={e => e.preventDefault()}>
       <FontSizeList onChange={toggleInlineStyle} />
@@ -80,6 +118,7 @@ const Toolbar = () => {
       <ColorPickerPopup onChange={toggleInlineStyle} />
       <Alignment onChange={setAlignment} />
       <UndoRedo onChange={handleUndoRedo} />
+      <Indent onChange={setIndent} />
     </div>
   );
 };

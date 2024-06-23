@@ -14,8 +14,8 @@ export const customStyleMap = (() => {
   // FONTS.forEach(font => {
   //   styleMap[`fontFamily.${font}`] = { fontFamily: font };
   // });
-  FONT_SIZES.forEach(font => {
-    styleMap[`fontSize.${font.size}`] = { fontSize: `${font.size}pt` };
+  FONT_SIZES.forEach(size => {
+    styleMap[`fontSize.${size}`] = { fontSize: `${size}pt` };
   });
   return styleMap;
 })();
@@ -169,8 +169,8 @@ export const getStateToHtmlOptions = contentState => ({
     // FONTS.forEach(font => {
     //   styles[`fontFamily.${font}`] = { style: { fontFamily: font } };
     // });
-    FONT_SIZES.forEach(font => {
-      styles[`fontSize.${font.size}pt`] = { style: { fontSize: `${font.size}pt` } };
+    FONT_SIZES.forEach(size => {
+      styles[`fontSize.${size}pt`] = { style: { fontSize: `${size}pt` } };
     });
     return styles;
   })(),
