@@ -55,6 +55,7 @@ const InlineStyles = () => {
           className={`toolbar-item ${isActive(item.style) ? 'active' : ''}`}
           onMouseDown={applyStyle}
           title={item.tooltip}
+          tabIndex="0"
         >
           {item.icon}
         </div>

@@ -19,6 +19,7 @@ function Indent(props) {
           className="toolbar-item"
           onMouseDown={event => handleIndent(event, indent)}
           title={indent.tooltip}
+          tabIndex="0"
         >
           <FontAwesomeIcon icon={indent.icon} />
         </div>

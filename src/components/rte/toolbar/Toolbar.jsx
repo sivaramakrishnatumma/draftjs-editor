@@ -117,8 +117,8 @@ const Toolbar = () => {
       <InlineStyles />
       <ColorPickerPopup onChange={toggleInlineStyle} />
       <Alignment onChange={setAlignment} />
-      <UndoRedo onChange={handleUndoRedo} />
       <Indent onChange={setIndent} />
+      <UndoRedo onChange={handleUndoRedo} />
     </div>
   );
 };

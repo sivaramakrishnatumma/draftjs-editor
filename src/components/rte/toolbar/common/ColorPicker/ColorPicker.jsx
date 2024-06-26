@@ -31,7 +31,7 @@ function ColorPicker(props) {
   };
 
   return (
-    <div ref={ref} className="color-picker">
+    <div ref={ref} className="color-picker" tabIndex="0">
       <div className="toolbar-item picker-icon" onMouseDown={handlePickerClick} title={tooltip}>
         <FontAwesomeIcon icon={faPalette} />
       </div>
@@ -42,6 +42,7 @@ function ColorPicker(props) {
             className="color-picker__item"
             style={{ backgroundColor: color.color }}
             onMouseDown={event => handleColorSelection(event, color.type)}
+            tabIndex="0"
           />
         ))}
       </div>

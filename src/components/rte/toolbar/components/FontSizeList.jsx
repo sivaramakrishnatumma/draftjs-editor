@@ -21,12 +21,14 @@ function FontSizeList(props) {
 
   return (
     <BaseDropdown
-      placeholder="Size"
+      placeholder="Default"
+      tooltip="Font Size"
       options={availableFontSizes}
       valueKey="type"
       displayKey="label"
       activeOption={activeOption}
       onChange={handleFontSizeChange}
+      tabIndex="0"
     />
   );
 }

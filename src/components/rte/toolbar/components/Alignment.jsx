@@ -19,6 +19,7 @@ function Alignment(props) {
       className={`toolbar-item`}
       onMouseDown={handleAlignmentSelection}
       title={item.tooltip}
+      tabIndex="0"
     >
       <FontAwesomeIcon icon={item.icon} />
     </div>

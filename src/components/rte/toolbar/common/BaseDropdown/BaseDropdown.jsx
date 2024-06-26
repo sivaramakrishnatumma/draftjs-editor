@@ -4,7 +4,7 @@ import useOnClickOutside from 'use-onclickoutside';
 import './BaseDropdown.css';
 
 function BaseDropdown(props) {
-  const { placeholder, options, displayKey, valueKey, activeOption, onChange } = props;
+  const { placeholder, tooltip, options, displayKey, valueKey, activeOption, onChange } = props;
   const ref = useRef();
 
   const [showOptions, setShowOptions] = useState(false);
@@ -29,9 +29,9 @@ function BaseDropdown(props) {
 
   return (
     <div ref={ref} className="dropdown">
-      <div className="select" onMouseDown={handleDropdownClick}>
+      <div className="select" onMouseDown={handleDropdownClick} title={tooltip || ''} tabIndex="0">
         {(activeOption && activeOption[displayKey]) || placeholder}{' '}
-        <i className={`arrow ${showOptions ? 'down' : 'up'}`}></i>
+        <i className={`arrow ${showOptions ? 'up' : 'down'}`}></i>
       </div>
       <div className={`options ${showOptions ? 'show' : ''}`}>
         {options.map(option => (
@@ -39,6 +39,7 @@ function BaseDropdown(props) {
             key={option[valueKey]}
             className={`option ${activeOption && activeOption[displayKey] === option[displayKey] ? 'selected' : ''}`}
             onMouseDown={e => handleMouseDown(e, option)}
+            tabIndex="0"
           >
             {option[displayKey]}
           </div>
@@ -50,6 +51,7 @@ function BaseDropdown(props) {
 
 BaseDropdown.propTypes = {
   placeholder: PropTypes.string,
+  tooltip: PropTypes.string,
   options: PropTypes.arrayOf(PropTypes.object),
   displayKey: PropTypes.string,
   valueKey: PropTypes.string,

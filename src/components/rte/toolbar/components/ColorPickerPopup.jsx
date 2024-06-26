@@ -10,7 +10,7 @@ function ColorPickerPopup(props) {
     onChange(value);
   };
 
-  return <ColorPicker colors={availableColors} tooltip="Font Color" onChange={handleChange} />;
+  return <ColorPicker colors={availableColors} tooltip="Font Color" onChange={handleChange} tabindex="0" />;
 }
 
 ColorPickerPopup.propTypes = {

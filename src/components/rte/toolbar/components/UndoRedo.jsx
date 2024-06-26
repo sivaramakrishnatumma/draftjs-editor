@@ -19,11 +19,11 @@ function UndoRedo(props) {
 
   return (
     <>
-      <div className="toolbar-item" onMouseDown={handleUndo} title="Undo">
+      <div className="toolbar-item" onMouseDown={handleUndo} title="Undo" tabIndex="0">
         <FontAwesomeIcon icon={faUndo} />
       </div>
 
-      <div className="toolbar-item" onMouseDown={handleRedo} title="Undo">
+      <div className="toolbar-item" onMouseDown={handleRedo} title="Redo" tabIndex="0">
         <FontAwesomeIcon icon={faRedo} />
       </div>
     </>
