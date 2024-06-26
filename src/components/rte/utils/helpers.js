@@ -106,6 +106,15 @@ export const blockStyle = block => {
       classes.push('indent1');
     }
   }
+
+  if (type === 'left-align') {
+    classes.push('left-align');
+  } else if (type === 'center-align') {
+    classes.push('center-align');
+  } else if (type === 'right-align') {
+    classes.push('right-align');
+  }
+
   data.forEach((v, k) => {
     switch (k) {
       case 'text-align':

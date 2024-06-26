@@ -3,7 +3,13 @@ import { DefaultDraftBlockRenderMap, Editor as DraftEditor, RichUtils } from 'dr
 import { stateToHTML } from 'draft-js-export-html';
 import { Map } from 'immutable';
 import { useEditorContext } from '../provider/EditorContext';
-import { blockRenderMap, customStyleMap, getBlockRendererFn, getStateToHtmlOptions } from '../utils/renderConfig';
+import {
+  blockRenderMap,
+  customStyleFn,
+  customStyleMap,
+  getBlockRendererFn,
+  getStateToHtmlOptions,
+} from '../utils/renderConfig';
 import { blockStyle } from '../utils/helpers';
 import 'draft-js/dist/Draft.css';
 import './Editor.css';
@@ -104,6 +110,7 @@ const Editor = ({ value, placeholder = 'Start typing...', onChange, className })
           ref={editor}
           placeholder={placeholder}
           customStyleMap={customStyleMap}
+          customStyleFn={customStyleFn}
           blockRendererFn={blockRendererFn}
           blockRenderMap={extendedBlockRenderMap}
           blockStyleFn={contentBlock => blockStyle(contentBlock)}

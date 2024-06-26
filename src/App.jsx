@@ -2,7 +2,7 @@ import { useState } from 'react';
 import './App.css';
 import { EditorProvider, Toolbar, Editor } from './components/rte';
 
-const sampleHTML = `<div style="text-align: center"><span style="font-weight: bold">dsaf</span></div>`;
+const sampleHTML = `<div style="text-align: center;"><span style="font-weight: bold; font-style: italic">dsaf</span></div>`;
 
 function App() {
   // const arr = [1, 2];

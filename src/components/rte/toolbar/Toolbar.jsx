@@ -1,4 +1,4 @@
-import { EditorState, Modifier, RichUtils, SelectionState } from 'draft-js';
+import { EditorState, RichUtils, SelectionState } from 'draft-js';
 import { useEditorContext } from '../provider/EditorContext';
 import InlineStyles from './InlineStyles';
 import './Toolbar.css';
@@ -59,14 +59,17 @@ const Toolbar = () => {
 
   const setAlignment = alignment => {
     console.log('alignment', alignment);
-    const contentState = activeEditorState.getCurrentContent();
-    const selectionState = activeEditorState.getSelection();
-    let newContentState = Modifier.mergeBlockData(contentState, selectionState, { 'text-align': alignment });
-    // const tableBlocks = tableBlocksInSelection(newContentState);
-    // if (tableBlocks) {
-    //   newContentState = setAlignmentInTable(alignment, newContentState, tableBlocks);
-    // }
-    updateEditorState(EditorState.push(activeEditorState, newContentState, 'change-block-data'));
+
+    updateEditorState(RichUtils.toggleBlockType(activeEditorState, alignment));
+
+    // const contentState = activeEditorState.getCurrentContent();
+    // const selectionState = activeEditorState.getSelection();
+    // let newContentState = Modifier.mergeBlockData(contentState, selectionState, { 'text-align': alignment });
+    // // const tableBlocks = tableBlocksInSelection(newContentState);
+    // // if (tableBlocks) {
+    // //   newContentState = setAlignmentInTable(alignment, newContentState, tableBlocks);
+    // // }
+    // updateEditorState(EditorState.push(activeEditorState, newContentState, 'change-block-data'));
   };
 
   const handleUndoRedo = event => {

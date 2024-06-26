@@ -231,3 +231,55 @@
 .public-DraftStyleDefault-depth4.public-DraftStyleDefault-reset {
   counter-reset: ol4;
 }
+
+.left-align {
+  text-align: left;
+}
+
+.center-align {
+  text-align: center;
+}
+
+.right-align {
+  text-align: right;
+}
+
+.indent1 {
+  margin-left: 2.5rem;
+}
+
+.indent2 {
+  margin-left: 5rem;
+}
+
+.indent3 {
+  margin-left: 7.5rem;
+}
+
+.indent4 {
+  margin-left: 10rem;
+}
+
+.indent5 {
+  margin-left: 12.5rem;
+}
+
+.indent6 {
+  margin-left: 15rem;
+}
+
+.indent7 {
+  margin-left: 17.5rem;
+}
+
+.indent8 {
+  margin-left: 20rem;
+}
+
+.indent9 {
+  margin-left: 22.5rem;
+}
+
+.indent10 {
+  margin-left: 25rem;
+}

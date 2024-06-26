@@ -1,16 +1,16 @@
-import { ContentState, EditorState, convertFromHTML } from 'draft-js';
+import { EditorState } from 'draft-js';
+import { stateFromHTML } from 'draft-js-import-html';
+import { stateFromHtmlOptions } from '../utils/renderConfig';
 
-export function generateNewState(value) {
-  let newState;
+export function generateNewState(html) {
+  let newEditorState;
 
-  if (value) {
-    const blocksFromHTML = convertFromHTML(value);
-    const state = ContentState.createFromBlockArray(blocksFromHTML.contentBlocks, blocksFromHTML.entityMap);
-
-    newState = EditorState.createWithContent(state);
+  if (html) {
+    newEditorState = EditorState.createWithContent(stateFromHTML(html, stateFromHtmlOptions));
+    newEditorState = EditorState.moveSelectionToEnd(newEditorState);
   } else {
-    newState = EditorState.createEmpty();
+    newEditorState = EditorState.createEmpty();
   }
 
-  return newState;
+  return newEditorState;
 }
