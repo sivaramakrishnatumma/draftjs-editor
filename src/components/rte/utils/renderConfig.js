@@ -23,21 +23,21 @@ export const customStyleMap = (() => {
 export const customStyleFn = style => {
   // "style" is an Immutable.js OrderedSet of inline styles for a given range of characters that share the same styling
 
-  // handle draftjs default styles
-  const defaultStyles = style
-    .intersect([
-      'BOLD',
-      'CODE',
-      'ITALIC',
-      'UNDERLINE',
-      FONT_SIZES.map(size => `fontSize.${size}`),
-      ...COLORS.map(color => `color.${color}`),
-    ])
-    .reduce((map, v) => {
-      return map.merge(customStyleMap[v]);
-    }, Map());
+  const defaultsStylesArray = [
+    'BOLD',
+    'CODE',
+    'ITALIC',
+    'UNDERLINE',
+    ...FONT_SIZES.map(size => `fontSize.${size}`),
+    ...COLORS.map(color => `color.${color}`),
+  ];
 
-  style = style.subtract(['BOLD', 'CODE', 'ITALIC', 'UNDERLINE']);
+  // handle draftjs default styles
+  const defaultStyles = style.intersect(defaultsStylesArray).reduce((map, v) => {
+    return map.merge(customStyleMap[v]);
+  }, Map());
+
+  style = style.subtract(defaultsStylesArray);
 
   // separate out any entries that are a string of multiple styles
   let groupedStyles = style.filter(v => v.includes(':'));
