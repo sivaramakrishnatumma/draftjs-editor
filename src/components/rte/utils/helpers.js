@@ -100,12 +100,6 @@ export const blockStyle = block => {
   if (depth > 0 && !type.includes('list-item')) {
     classes.push('indent' + depth);
   }
-  if (type === 'pasted-list-item') {
-    const indent = data.get('margin-left') ?? '00';
-    if (indent.slice(0, 2) > 36) {
-      classes.push('indent1');
-    }
-  }
 
   if (type === 'left-align') {
     classes.push('left-align');

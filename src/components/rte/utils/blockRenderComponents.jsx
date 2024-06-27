@@ -4,7 +4,6 @@
 import { EditorBlock } from 'draft-js';
 import camelCase from 'lodash.camelcase';
 import { Map } from 'immutable';
-import { defaultPreTagStyling } from './constants';
 
 // such as paragraph, unstyled, and the six heading levels
 export const StyledBlock = props => {
@@ -15,10 +14,6 @@ export const StyledBlock = props => {
     .reduce((styles, v, k) => {
       return styles.set(camelCase(k), v);
     }, Map());
-  if (block.getType() === 'code-block') {
-    const defaultStyle = Map(defaultPreTagStyling);
-    blockStyles = defaultStyle.merge(blockStyles);
-  }
   if (block.getDepth()) {
     blockStyles = blockStyles.set('marginLeft', `${block.getDepth() * 2.5}em`);
   }

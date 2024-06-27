@@ -1,7 +1,6 @@
 import { useEditorContext } from '../provider/EditorContext';
-import { EditorState, Modifier, RichUtils } from 'draft-js';
+import { RichUtils } from 'draft-js';
 import { inlineStyles } from './constants';
-import { getOppositeStyle, isSuperscriptOrSubscript } from './utils';
 
 const InlineStyles = () => {
   const { activeEditorState, updateEditorState } = useEditorContext();
@@ -18,17 +17,7 @@ const InlineStyles = () => {
     if (activeEditorState) {
       const style = event.currentTarget.getAttribute('data-style');
 
-      let newState = RichUtils.toggleInlineStyle(activeEditorState, style);
-
-      if (isSuperscriptOrSubscript(style)) {
-        const oppositeStyle = getOppositeStyle(style);
-        const contentState = Modifier.removeInlineStyle(
-          newState.getCurrentContent(),
-          newState.getSelection(),
-          oppositeStyle
-        );
-        newState = EditorState.push(newState, contentState, 'change-inline-style');
-      }
+      const newState = RichUtils.toggleInlineStyle(activeEditorState, style);
 
       if (newState) {
         updateEditorState(newState);

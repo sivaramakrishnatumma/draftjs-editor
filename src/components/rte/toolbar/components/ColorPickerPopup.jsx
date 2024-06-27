@@ -6,7 +6,6 @@ function ColorPickerPopup(props) {
   const { onChange } = props;
 
   const handleChange = value => {
-    console.log(value);
     onChange(value);
   };
 
