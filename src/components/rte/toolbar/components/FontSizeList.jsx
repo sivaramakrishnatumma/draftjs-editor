@@ -17,11 +17,14 @@ function FontSizeList(props) {
     .toList()
     .get(0);
 
-  const activeOption = availableFontSizes.find(size => size.type === activeItem);
+  let activeOption = availableFontSizes.find(size => size.type === activeItem);
+
+  if (!activeOption) {
+    activeOption = availableFontSizes.find(size => size.label === 12);
+  }
 
   return (
     <BaseDropdown
-      placeholder="Default"
       tooltip="Font Size"
       options={availableFontSizes}
       valueKey="type"

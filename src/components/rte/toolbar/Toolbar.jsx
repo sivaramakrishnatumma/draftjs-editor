@@ -6,6 +6,7 @@ import ColorPickerPopup from './components/ColorPickerPopup';
 import Alignment from './components/Alignment';
 import UndoRedo from './components/UndoRedo';
 import Indent from './components/Indent';
+import ListType from './components/ListType';
 import { MAX_INDENT_DEPTH, MAX_LIST_DEPTH } from '../utils/constants';
 import './Toolbar.css';
 
@@ -103,6 +104,12 @@ const Toolbar = () => {
     updateEditorState(newEditorState);
   };
 
+  const toggleBlockType = blockType => {
+    if (activeEditorState) {
+      updateEditorState(RichUtils.toggleBlockType(activeEditorState, blockType));
+    }
+  };
+
   return (
     <div className="toolbar-container" onMouseDown={e => e.preventDefault()}>
       <FontSizeList onChange={toggleInlineStyle} />
@@ -111,6 +118,7 @@ const Toolbar = () => {
       <Alignment onChange={setAlignment} />
       <Indent onChange={setIndent} />
       <UndoRedo onChange={handleUndoRedo} />
+      <ListType onChange={toggleBlockType} />
     </div>
   );
 };

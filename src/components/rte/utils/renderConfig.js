@@ -1,71 +1,29 @@
 import { DefaultDraftInlineStyle } from 'draft-js';
-import { Map, OrderedSet } from 'immutable';
+import { OrderedSet } from 'immutable';
 import camelCase from 'lodash.camelcase';
-import isEmpty from 'lodash.isempty';
-import { COLORS, FONT_SIZES } from './constants';
-import { buildHtmlForBlockText, convertStyleStringToObject, getClassesAndStyles } from './helpers';
+import { buildHtmlForBlockText, getClassesAndStyles } from './helpers';
 import { StyledBlock } from './blockRenderComponents';
 
 export const customStyleMap = (() => {
-  const styleMap = { ...DefaultDraftInlineStyle };
-  COLORS.forEach(color => {
-    styleMap[`color.${color}`] = { color: color };
-  });
-
-  FONT_SIZES.forEach(size => {
-    styleMap[`fontSize.${size}`] = { fontSize: `${size}pt` };
-  });
-
-  return styleMap;
+  return { ...DefaultDraftInlineStyle };
 })();
 
 // this is for handling inline styles, including draft's default styles, styles from the customStyleMap, and those from the style attribute of the html
 export const customStyleFn = style => {
-  // "style" is an Immutable.js OrderedSet of inline styles for a given range of characters that share the same styling
+  const styleNames = style.toJS();
 
-  const defaultsStylesArray = [
-    'BOLD',
-    'CODE',
-    'ITALIC',
-    'UNDERLINE',
-    ...FONT_SIZES.map(size => `fontSize.${size}`),
-    ...COLORS.map(color => `color.${color}`),
-  ];
+  const styles = styleNames.reduce((acc, styleName) => {
+    if (styleName.includes('.')) {
+      const [key, value] = styleName.split('.');
+      acc[key] = value + (key === 'fontSize' ? 'pt' : '');
+    } else {
+      return { ...acc, ...customStyleMap[styleName] };
+    }
 
-  // handle draftjs default styles
-  const defaultStyles = style.intersect(defaultsStylesArray).reduce((map, v) => {
-    return map.merge(customStyleMap[v]);
-  }, Map());
+    return acc;
+  }, {});
 
-  style = style.subtract(defaultsStylesArray);
-
-  // separate out any entries that are a string of multiple styles
-  let groupedStyles = style.filter(v => v.includes(':'));
-  style = style.subtract(groupedStyles);
-
-  // convert string containing multiple styles to a CSS styles object
-  groupedStyles = groupedStyles.reduce((map, v) => {
-    v = convertStyleStringToObject(v);
-    v = Map(v).mapKeys(k => camelCase(k));
-    return map.merge(v);
-  }, Map());
-
-  // convert style strings with single style to CSS styles objects and merge with groupedStyles
-  style = style
-    .map(v => v.split('.'))
-    .filter(v => v.every(vv => vv.length))
-    .reduce((map, v) => {
-      const key = v.shift().trim();
-      const val = v.join('.').trim();
-      return map.merge({ [key]: val });
-    }, groupedStyles.merge(defaultStyles))
-    .toJS();
-
-  if (isEmpty(style)) {
-    return null;
-  }
-
-  return style;
+  return Object.keys(styles).length ? styles : null;
 };
 
 export const getBlockRendererFn = () => block => {
@@ -96,23 +54,6 @@ export const blockRenderMap = {
  * used to convert draft.js internal state into html for export outside of draft.js.
  */
 export const getStateToHtmlOptions = contentState => ({
-  inlineStyles: (() => {
-    const styles = {
-      BOLD: { style: { fontWeight: 'bold' } },
-      ITALIC: { style: { fontStyle: 'italic' } },
-      UNDERLINE: { style: { textDecoration: 'underline' } },
-      STRIKETHROUGH: { style: { textDecoration: 'line-through' } },
-    };
-    COLORS.forEach(color => {
-      styles[`color.${color}`] = { style: { color: color } };
-    });
-    FONT_SIZES.forEach(size => {
-      styles[`fontSize.${size}pt`] = { style: { fontSize: `${size}pt` } };
-    });
-
-    return styles;
-  })(),
-
   // this handles converting any inline styles not matched by the inlineStyles map above (custom added styles)
   inlineStyleFn: style => {
     style = customStyleFn(style);

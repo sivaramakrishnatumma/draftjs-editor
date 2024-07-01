@@ -1,6 +1,6 @@
 import { faAlignCenter, faAlignLeft, faAlignRight, faIndent, faOutdent } from '@fortawesome/free-solid-svg-icons';
 
-export const MAX_INDENT_DEPTH = 8;
+export const MAX_INDENT_DEPTH = 6;
 export const MAX_LIST_DEPTH = 4;
 export const defaultPreTagStyling = [
   ['padding', '9.5px'],
