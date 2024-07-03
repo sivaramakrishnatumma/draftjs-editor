@@ -17,9 +17,8 @@
 
 .toolbar-item {
   border: 1px solid #f1f1f1;
-  padding: 12px 5px;
   min-width: 25px;
-  height: 20px;
+  height: 25px;
   border-radius: 2px;
   margin: 0 4px;
   display: flex;
@@ -45,5 +44,42 @@
     background-color: transparent;
     box-shadow: none;
     border: 1px solid #34495e;
+  }
+}
+
+.image-upload-wrapper {
+  position: relative;
+
+  .image-uploader {
+    position: absolute;
+    background: #fff;
+    padding: 1em;
+    right: 0;
+    top: 30px;
+    border-radius: 5px;
+    border: 1px solid #bbb;
+    width: 300px;
+    z-index: 10;
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+
+      input {
+        padding: 5px;
+      }
+    }
+
+    .add-to-document-btn {
+      background-color: transparent;
+      width: 100%;
+      border: 1px solid #0b0b0b;
+      border-radius: 5px;
+      margin-top: 1em;
+      padding: 0.5em;
+      font-size: 14px;
+      cursor: pointer;
+    }
   }
 }

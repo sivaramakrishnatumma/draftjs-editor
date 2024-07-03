@@ -1,12 +1,11 @@
 import { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import useOnClickOutside from 'use-onclickoutside';
-import { faPalette } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './ColorPicker.css';
 
 function ColorPicker(props) {
-  const { colors, tooltip, onChange } = props;
+  const { colors, tooltip, icon, activeOption, onChange } = props;
   const ref = useRef();
 
   const [showPicker, setShowPicker] = useState();
@@ -33,13 +32,14 @@ function ColorPicker(props) {
   return (
     <div ref={ref} className="color-picker" tabIndex="0">
       <div className="toolbar-item picker-icon" onMouseDown={handlePickerClick} title={tooltip}>
-        <FontAwesomeIcon icon={faPalette} />
+        <FontAwesomeIcon icon={icon} />
+        <div className="line" style={{ backgroundColor: activeOption?.color }}></div>
       </div>
       <div className={`colors-container ${showPicker ? 'show' : ''}`}>
         {colors.map((color, index) => (
           <div
             key={index}
-            className="color-picker__item"
+            className={`color-picker__item ${activeOption?.color === color.color ? 'selected' : ''}`}
             style={{ backgroundColor: color.color }}
             onMouseDown={event => handleColorSelection(event, color.type)}
             tabIndex="0"
@@ -53,6 +53,8 @@ function ColorPicker(props) {
 ColorPicker.propTypes = {
   colors: PropTypes.arrayOf(PropTypes.object),
   tooltip: PropTypes.string,
+  icon: PropTypes.object.isRequired,
+  activeOption: PropTypes.object,
   onChange: PropTypes.func,
 };
 

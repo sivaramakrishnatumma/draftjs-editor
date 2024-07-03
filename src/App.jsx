@@ -6,7 +6,7 @@ const sampleHTML = `<div style="text-align: center;"><span style="font-weight: b
 
 function App() {
   // const arr = [1, 2];
-  const [value, setValue] = useState(sampleHTML);
+  const [value, setValue] = useState('');
 
   const handleChange = htmlText => {
     console.log('htmlText::', htmlText);

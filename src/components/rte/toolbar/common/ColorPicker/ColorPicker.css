@@ -3,6 +3,18 @@
   display: inline-block;
 }
 
+.picker-icon {
+  flex-direction: column;
+  font-size: 11px !important;
+  gap: 2px;
+}
+
+.line {
+  height: 2.5px;
+  width: 65%;
+  background: #212529;
+}
+
 .color-picker__item {
   width: 20px;
   height: 20px;
@@ -10,6 +22,11 @@
   cursor: pointer;
 
   &:hover {
+    border-color: #ccc;
+    transform: scale(1.1);
+  }
+
+  &.selected {
     border-color: #ccc;
     transform: scale(1.1);
   }

@@ -39,6 +39,33 @@ export const COLORS = [
 
 export const FONT_SIZES = [8, 9, 10, 11, 12, 14, 18, 24, 36];
 
+export const BACKGROUND_COLORS = [
+  '#000000',
+  '#FFFFFF',
+  '#888888',
+  '#AAAAAA',
+  '#EEEEEE',
+  '#880000',
+  '#CC0000',
+  '#FF0000',
+  '#FFCCCC',
+  '#FF8800',
+  '#FFCC00',
+  '#FFFF00',
+  '#CCFF00',
+  '#88FF00',
+  '#008800',
+  '#00CC00',
+  '#00CC88',
+  '#00CCCC',
+  '#CCEEFF',
+  '#00CCFF',
+  '#0088FF',
+  '#0000FF',
+  '#8800FF',
+  '#CC00CC',
+  '#CC0088',
+];
 export const availableFontSizes = (() => {
   return FONT_SIZES.map(size => {
     return { type: `fontSize.${size}`, label: size };
@@ -51,6 +78,14 @@ export const availableColors = (() => {
     availableColors.push({ type: `color.${color}`, color: color });
   });
   return availableColors;
+})();
+
+export const availableBackgroundColors = (() => {
+  const availableBackgroundColors = [];
+  BACKGROUND_COLORS.forEach(color => {
+    availableBackgroundColors.push({ type: `backgroundColor.${color}`, color: color });
+  });
+  return availableBackgroundColors;
 })();
 
 export const availableAlignments = [

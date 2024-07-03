@@ -2,7 +2,7 @@ import { DefaultDraftInlineStyle } from 'draft-js';
 import { OrderedSet } from 'immutable';
 import camelCase from 'lodash.camelcase';
 import { buildHtmlForBlockText, getClassesAndStyles } from './helpers';
-import { StyledBlock } from './blockRenderComponents';
+import { Image, StyledBlock } from './blockRenderComponents';
 
 export const customStyleMap = (() => {
   return { ...DefaultDraftInlineStyle };
@@ -33,6 +33,11 @@ export const getBlockRendererFn = () => block => {
       return {
         component: StyledBlock,
         editable: true,
+      };
+    case 'atomic':
+      return {
+        component: Image,
+        editable: false,
       };
     default:
       return null;

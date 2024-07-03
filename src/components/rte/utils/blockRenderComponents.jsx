@@ -5,6 +5,12 @@ import { EditorBlock } from 'draft-js';
 import camelCase from 'lodash.camelcase';
 import { Map } from 'immutable';
 
+// Block component to render the image
+export const Image = props => {
+  const { src } = props.contentState.getEntity(props.block.getEntityAt(0)).getData();
+  return <img src={src} alt="" style={{ maxWidth: '100%' }} />;
+};
+
 // such as paragraph, unstyled, and the six heading levels
 export const StyledBlock = props => {
   const { block } = props;
