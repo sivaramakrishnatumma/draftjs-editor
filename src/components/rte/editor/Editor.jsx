@@ -1,32 +1,30 @@
-import { useEffect, useId, useRef } from 'react';
+import { forwardRef, useEffect, useId, useImperativeHandle, useRef } from 'react';
 import { DefaultDraftBlockRenderMap, Editor as DraftEditor, RichUtils } from 'draft-js';
-import { stateToHTML } from 'draft-js-export-html';
+import DOMPurify from 'dompurify';
 import { Map } from 'immutable';
 import { useEditorContext } from '../provider/EditorContext';
-import {
-  blockRenderMap,
-  customStyleFn,
-  customStyleMap,
-  getBlockRendererFn,
-  getStateToHtmlOptions,
-} from '../utils/renderConfig';
-import { blockStyle } from '../utils/helpers';
+import { blockRenderMap, blockStyle, customStyleFn, customStyleMap, getBlockRendererFn } from '../utils/renderConfig';
+import { convertEditorStateToHtml } from '../utils/html-export-utils';
+import { deleteBlankInState, insertBlankInState, updateBlankNumbers } from '../utils/blank-utils';
 import 'draft-js/dist/Draft.css';
 import './Editor.css';
 
-const convertEditorStateToHtml = state => {
-  const currentContent = state.getCurrentContent();
-  const options = getStateToHtmlOptions(currentContent);
-  const htmlContent = currentContent.hasText() ? stateToHTML(currentContent, options) : '';
-  return htmlContent;
-};
-
 const customBlockRenderMap = Map(blockRenderMap);
 const extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(customBlockRenderMap);
+const blockRendererFn = getBlockRendererFn();
 
-// eslint-disable-next-line react/prop-types
-const Editor = ({ value, placeholder = 'Start typing...', onChange, className }) => {
-  const editor = useRef();
+/**
+ * Editor component for Draft.js
+ *
+ * @param {object} props - Component props
+ * @param {string} props.value - Initial editor value
+ * @param {string} [props.placeholder='Start typing...'] - Placeholder text
+ * @param {function} props.onChange - Callback for editor changes
+ * @param {string} [props.className] - Additional CSS class for the editor container
+ */
+const Editor = forwardRef(({ value, placeholder = 'Start typing...', onChange, className, allowBlanks }, ref) => {
+  const editorRef = useRef();
+  const outputHTML = useRef();
   const id = useId();
   const {
     editorStates,
@@ -38,11 +36,19 @@ const Editor = ({ value, placeholder = 'Start typing...', onChange, className })
     updateEditorState,
   } = useEditorContext();
 
+  useImperativeHandle(ref, () => {
+    return {
+      insertBlank,
+      deleteBlank,
+    };
+  });
+
   /**
    * Initializes the editor state for the given id and value.
    */
   useEffect(() => {
     createEditorState(id, value);
+    editorRef.current?.focus();
 
     // Cleanup function to clear the editor state when the component unmounts.
     return () => {
@@ -58,7 +64,10 @@ const Editor = ({ value, placeholder = 'Start typing...', onChange, className })
   useEffect(() => {
     if (activeEditorId === id) {
       const htmlContent = convertEditorStateToHtml(activeEditorState);
-      onChange?.(htmlContent);
+      if (outputHTML.current !== htmlContent) {
+        outputHTML.current = htmlContent;
+        onChange?.(DOMPurify.sanitize(htmlContent));
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeEditorState]);
@@ -87,7 +96,10 @@ const Editor = ({ value, placeholder = 'Start typing...', onChange, className })
    * @param {object} newState The new state of the editor.
    */
   const handleChange = newState => {
-    updateEditorState(newState);
+    const updatedState = allowBlanks ? updateBlankNumbers(newState) : newState;
+
+    // Update the editor state
+    updateEditorState(updatedState);
   };
 
   /**
@@ -97,17 +109,35 @@ const Editor = ({ value, placeholder = 'Start typing...', onChange, className })
     activateEditor(id);
   };
 
+  /**
+   * returns current editor state.
+   */
   const getEditorState = () => {
     return editorStates[id];
   };
 
-  const blockRendererFn = getBlockRendererFn(editor.current, getEditorState, onChange);
+  /**
+   * Inserts a blank into the editor state.
+   */
+  const insertBlank = () => {
+    const editorState = getEditorState();
+    updateEditorState(insertBlankInState(editorState));
+  };
+
+  /**
+   * Removes a blank in the editor state.
+   */
+  const deleteBlank = key => {
+    editorRef.current.focus();
+    const editorState = getEditorState();
+    updateEditorState(deleteBlankInState(editorState, key));
+  };
 
   return (
     editorStates[id] && (
-      <div className={`editable editor ${className}`}>
+      <div className={`editable editor ${className}`} onClick={() => editorRef.current.focus()}>
         <DraftEditor
-          ref={editor}
+          ref={editorRef}
           placeholder={placeholder}
           customStyleMap={customStyleMap}
           customStyleFn={customStyleFn}
@@ -122,6 +152,6 @@ const Editor = ({ value, placeholder = 'Start typing...', onChange, className })
       </div>
     )
   );
-};
+});
 
 export default Editor;

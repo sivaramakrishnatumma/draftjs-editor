@@ -3,7 +3,7 @@ import { Editor, EditorState, Modifier, CompositeDecorator } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 
 // Component to render the image
-const Image = props => {
+const InlineImage = props => {
   // eslint-disable-next-line react/prop-types
   const { src } = props.contentState.getEntity(props.entityKey).getData();
   return <img src={src} style={{ width: '50px', height: '50px' }} alt="inline" />;
@@ -21,7 +21,7 @@ const findImageEntities = (contentBlock, callback, contentState) => {
 const decorator = new CompositeDecorator([
   {
     strategy: findImageEntities,
-    component: Image,
+    component: InlineImage,
   },
 ]);
 

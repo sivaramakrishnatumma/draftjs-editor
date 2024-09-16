@@ -1,9 +1,10 @@
 import { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import useOnClickOutside from 'use-onclickoutside';
-import './BaseDropdown.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import './AlignmentDropdown.css';
 
-function BaseDropdown(props) {
+function AlignmentDropdown(props) {
   const {
     placeholder,
     tooltip,
@@ -15,6 +16,7 @@ function BaseDropdown(props) {
     optionStylesFn,
     className,
     onChange,
+    iconKey,
   } = props;
   const ref = useRef();
 
@@ -28,7 +30,6 @@ function BaseDropdown(props) {
 
   const handleMouseDown = (event, option) => {
     event.preventDefault();
-
     onChange(option[valueKey]);
     setShowOptions(!showOptions);
   };
@@ -39,9 +40,13 @@ function BaseDropdown(props) {
   };
 
   return (
-    <div ref={ref} className={`dropdown ${className || ''}`}>
+    <div ref={ref} className={`AlignmentDropdown ${className || ''}`}>
       <div tabIndex="0" title={tooltip || ''} style={style} className="select" onMouseDown={handleDropdownClick}>
-        {(activeOption && activeOption[displayKey]) || placeholder}
+        {iconKey && activeOption && activeOption[iconKey] ? (
+          <FontAwesomeIcon icon={activeOption[iconKey]} />
+        ) : (
+          (activeOption && activeOption[displayKey]) || placeholder
+        )}
         <i className={`arrow ${showOptions ? 'up' : 'down'}`}></i>
       </div>
       <div className={`options ${showOptions ? 'show' : ''}`}>
@@ -49,11 +54,12 @@ function BaseDropdown(props) {
           <div
             tabIndex="0"
             key={option[valueKey]}
-            className={`option ${activeOption && activeOption[displayKey] === option[displayKey] ? 'selected' : ''}`}
+            title={option.tooltip || ''}
+            className={`option ${activeOption && activeOption[valueKey] === option[valueKey] ? 'selected' : ''}`}
             onMouseDown={e => handleMouseDown(e, option)}
             style={optionStylesFn && optionStylesFn(option, displayKey)}
           >
-            {option[displayKey]}
+            {iconKey && option[iconKey] ? <FontAwesomeIcon icon={option[iconKey]} /> : option[displayKey]}
           </div>
         ))}
       </div>
@@ -61,7 +67,7 @@ function BaseDropdown(props) {
   );
 }
 
-BaseDropdown.propTypes = {
+AlignmentDropdown.propTypes = {
   placeholder: PropTypes.string,
   tooltip: PropTypes.string,
   options: PropTypes.arrayOf(PropTypes.object),
@@ -72,6 +78,7 @@ BaseDropdown.propTypes = {
   optionStylesFn: PropTypes.func,
   className: PropTypes.string,
   onChange: PropTypes.func,
+  iconKey: PropTypes.string,
 };
 
-export default BaseDropdown;
+export default AlignmentDropdown;

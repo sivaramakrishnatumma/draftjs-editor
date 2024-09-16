@@ -3,25 +3,29 @@ import BaseDropdown from '../common/BaseDropdown/BaseDropdown';
 import { availableFontSizes } from '../../utils/constants';
 import { useEditorContext } from '../../provider/EditorContext';
 
-function FontSizeList(props) {
-  const { onChange } = props;
+/**
+ * FontSizeList component
+ *
+ * @param {Function} onChange - Callback function to handle changes
+ */
+function FontSizeList({ onChange }) {
   const { activeEditorState } = useEditorContext();
 
-  const handleFontSizeChange = value => {
-    onChange(value);
-  };
-
+  /**
+   * Get the active font size from the editor state
+   */
   const activeItem = activeEditorState
     ?.getCurrentInlineStyle()
-    .filter(style => style.includes('.') && style.split('.')[0] === availableFontSizes[0].type.split('.')[0]) // compound styles are dot-delimited e.g. fontFamily.Arial
+    .filter(style => style.includes('-') && style.split('-')[0] === availableFontSizes[0].type.split('-')[0])
     .toList()
     .get(0);
 
-  let activeOption = availableFontSizes.find(size => size.type === activeItem);
-
-  if (!activeOption) {
-    activeOption = availableFontSizes.find(size => size.label === 12);
-  }
+  /**
+   * Get the active font size option
+   */
+  const activeOption =
+    availableFontSizes.find(family => family.type === activeItem) ||
+    availableFontSizes.find(family => family.label === 12);
 
   return (
     <BaseDropdown
@@ -30,7 +34,7 @@ function FontSizeList(props) {
       valueKey="type"
       displayKey="label"
       activeOption={activeOption}
-      onChange={handleFontSizeChange}
+      onChange={onChange}
       tabIndex="0"
     />
   );

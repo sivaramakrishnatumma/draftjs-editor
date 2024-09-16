@@ -1,18 +1,18 @@
-.dropdown {
+.AlignmentDropdown {
   position: relative;
   margin: 0 1px;
 }
 
-.dropdown .select {
+.AlignmentDropdown .select {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 3px 6px;
+  padding: 3px 0.5rem;
   border: 1px solid #ccc;
-  min-width: 45px;
+  min-width: 50px;
   cursor: pointer;
   background-color: #fff;
-  font-size: 14px;
+  font-size: 13px;
   height: 25.6px;
 
   &:hover {
@@ -24,7 +24,20 @@
   }
 }
 
-.dropdown .options {
+.AlignmentDropdown .arrow {
+  border: solid #a4a2a2;
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+  padding: 3px;
+}
+
+.AlignmentDropdown .arrow.up {
+  transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+  margin-top: 7px;
+}
+
+.AlignmentDropdown .options {
   display: none;
   position: absolute;
   background: #fff;
@@ -35,11 +48,11 @@
   font-size: 13px;
 }
 
-.dropdown .options.show {
+.AlignmentDropdown .options.show {
   display: block;
 }
 
-.dropdown .option {
+.AlignmentDropdown .option {
   padding: 3px 0.5rem;
   border-bottom: 1px solid #f1f1f1;
   color: #595959;
@@ -60,20 +73,7 @@
   }
 }
 
-.dropdown .arrow {
-  border: solid #a4a2a2;
-  border-width: 0 2px 2px 0;
-  display: inline-block;
-  padding: 3px;
-}
-
-.dropdown .up {
-  transform: rotate(-135deg);
-  -webkit-transform: rotate(-135deg);
-  margin-top: 7px;
-}
-
-.dropdown .down {
+.AlignmentDropdown .down {
   transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
   margin-top: -3px;

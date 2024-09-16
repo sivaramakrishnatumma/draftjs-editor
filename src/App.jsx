@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import './App.css';
 import { EditorProvider, Toolbar, Editor } from './components/rte';
 
@@ -7,6 +7,11 @@ const sampleHTML = `<div style="text-align: center;"><span style="font-weight: b
 function App() {
   // const arr = [1, 2];
   const [value, setValue] = useState('');
+  const editorRef = useRef();
+
+  const handleAddblank = () => {
+    editorRef.current.insertBlank();
+  };
 
   const handleChange = htmlText => {
     console.log('htmlText::', htmlText);
@@ -23,13 +28,14 @@ function App() {
             <Editor key={item} />
           ))} */}
 
-          <Editor value={value} onChange={handleChange} placeholder="My Rich Text Editor" />
+          <Editor ref={editorRef} value={value} onChange={handleChange} placeholder="My Rich Text Editor" />
 
-          <Editor placeholder="My Rich Text Editor" />
+          {/* <Editor placeholder="My Rich Text Editor" />
 
-          <Editor />
+          <Editor /> */}
 
-          <Editor />
+          {/* <Editor /> */}
+          <button onClick={handleAddblank}>Add blank</button>
         </EditorProvider>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import AlignmentDropdown from '../common/AlignmentDropdown/AlignmentDropdown';
 import { availableAlignments } from '../../utils/constants';
 import { useEditorContext } from '../../provider/EditorContext';
 
@@ -7,30 +7,32 @@ function Alignment(props) {
   const { onChange } = props;
   const { activeEditorState } = useEditorContext();
 
+  const handleAlignmentChange = value => {
+    onChange(value);
+  };
+
   const currentBlockType = activeEditorState
     ?.getCurrentContent()
     .getBlockForKey(activeEditorState.getSelection().getStartKey())
-    .getType();
+    .getData()
+    .get('alignment');
 
-  const handleAlignmentSelection = event => {
-    event.preventDefault();
+  const activeItem = availableAlignments.find(item => currentBlockType === item.alignment);
 
-    const alignment = event.currentTarget.getAttribute('data-alignment');
-    onChange(alignment);
-  };
+  let activeOption = activeItem || availableAlignments.find(item => item.alignment === 'left');
 
-  return availableAlignments.map(item => (
-    <div
-      key={item.alignment}
-      data-alignment={`${item.alignment}-align`}
-      className={`toolbar-item ${currentBlockType === item.alignment + '-align' ? 'active' : ''}`}
-      onMouseDown={handleAlignmentSelection}
-      title={item.tooltip}
+  return (
+    <AlignmentDropdown
+      tooltip="Alignment"
+      options={availableAlignments}
+      valueKey="alignment"
+      displayKey="tooltip"
+      activeOption={activeOption}
+      onChange={handleAlignmentChange}
       tabIndex="0"
-    >
-      <FontAwesomeIcon icon={item.icon} />
-    </div>
-  ));
+      iconKey="icon"
+    />
+  );
 }
 
 Alignment.propTypes = {

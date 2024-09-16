@@ -1,8 +1,22 @@
 import { generateNewState } from './utils';
 
+/**
+ * Reducer function for the editor state.
+ *
+ * @param {Object} state - The current state of the editor.
+ * @param {Object} action - The action to be performed on the state.
+ * @returns {Object} The new state of the editor.
+ */
 function EditorReducer(state, action) {
   const { type, payload } = action;
+
   switch (type) {
+    /**
+     * Initializes the editor state with a new value.
+     *
+     * @param {string} id - The ID of the editor.
+     * @param {any} value - The initial value of the editor.
+     */
     case 'INITIALIZE_EDITOR_STATE': {
       const { id, value } = payload;
       if (id) {
@@ -13,6 +27,11 @@ function EditorReducer(state, action) {
       return state;
     }
 
+    /**
+     * Updates the active editor state.
+     *
+     * @param {any} payload - The new state of the active editor.
+     */
     case 'UPDATE_EDITOR_STATE':
       if (state.activeEditorId) {
         return {
@@ -23,6 +42,11 @@ function EditorReducer(state, action) {
       }
       return state;
 
+    /**
+     * Clears the editor state for a specific ID.
+     *
+     * @param {string} payload - The ID of the editor to clear.
+     */
     case 'CLEAR_EDITOR_STATE': {
       const states = { ...state.editorStates };
       delete states[payload];
@@ -30,6 +54,11 @@ function EditorReducer(state, action) {
       return { ...state, editorStates: states };
     }
 
+    /**
+     * Activates a selected editor.
+     *
+     * @param {string} payload - The ID of the editor to activate.
+     */
     case 'ACTIVATE_SELECTED_EDITOR':
       return {
         ...state,
@@ -37,6 +66,9 @@ function EditorReducer(state, action) {
         activeEditorState: state.editorStates[payload],
       };
 
+    /**
+     * Deactivates the currently active editor.
+     */
     case 'DEACTIVATE_SELECTED_EDITOR':
       return {
         ...state,

@@ -3,31 +3,50 @@ import { faFillDrip } from '@fortawesome/free-solid-svg-icons';
 import ColorPicker from '../common/ColorPicker/ColorPicker';
 import { availableBackgroundColors } from '../../utils/constants';
 import { useEditorContext } from '../../provider/EditorContext';
+import { getHexaCode } from '../../utils/helpers';
 
-function BackgroundColorPickerPopup(props) {
-  const { onChange } = props;
+/**
+ * BackgroundColorPickerPopup component
+ *
+ * @param {Function} onChange - Callback function to handle color changes
+ */
+function BackgroundColorPickerPopup({ onChange }) {
   const { activeEditorState } = useEditorContext();
 
-  const handleChange = value => {
-    onChange(value);
+  /**
+   * Gets the active item from the editor state
+   *
+   * @returns {string|null} The active item or null if none is found
+   */
+  const getActiveItem = () => {
+    return activeEditorState
+      ?.getCurrentInlineStyle()
+      .filter(style => style.includes('-') && style.split('-')[0] === availableBackgroundColors[0].type.split('-')[0])
+      .toList()
+      .get(0);
   };
 
-  const activeItem = activeEditorState
-    ?.getCurrentInlineStyle()
-    .filter(style => style.includes('.') && style.split('.')[0] === availableBackgroundColors[0].type.split('.')[0]) // compound styles are dot-delimited e.g. fontFamily.Arial
-    .toList()
-    .get(0);
+  /**
+   * Gets the active option from the available background colors
+   *
+   * @returns {object|null} The active option or null if none is found
+   */
+  const getActiveOption = () => {
+    const activeItem = getActiveItem();
+    if (!activeItem) return null;
 
-  let activeOption = availableBackgroundColors.find(color => color.type === activeItem);
+    const color = getHexaCode(activeItem.split('-')[1]);
+    return availableBackgroundColors.find(bgColor => bgColor.color.toLowerCase() === color.toLowerCase());
+  };
 
   return (
     <ColorPicker
-      tabindex="0"
+      tabIndex="0"
       colors={availableBackgroundColors}
       tooltip="Highlight Color"
       icon={faFillDrip}
-      activeOption={activeOption}
-      onChange={handleChange}
+      activeOption={getActiveOption()}
+      onChange={onChange}
     />
   );
 }
